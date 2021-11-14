@@ -83,7 +83,7 @@ paths:
               properties:
                 _crsf_token_kbkmorg:
                   type: string
-                  description: CRSFトークン。ページのmetaタグにcsrf_tokenで埋まってる。
+                  description: CRSFトークン
                 name:
                   type: string
                   description: スケジュール名
@@ -278,10 +278,10 @@ paths:
             examples:
               req1:
                 summary: EST編集
-                value: { length: 1820, _crsf_token_kbkmorg: 'mWLU86q9wt_XP_aiKjs5wy3656Ym-od1DtsgWCUfJwj1HYIwio3vaYwujUT__QvS' }
+                value: { length: 1820, _crsf_token_kbkmorg: 'hogehogehogehoge' }
               req2:
                 summary: ゲームタイトル等編集
-                value: { columns: [{ '463a5xdddvfbnjc539': '新ゲームタイトル' }], _crsf_token_kbkmorg: 'mWLU86q9wt_XP_aiKjs5wy3656Ym-od1DtsgWCUfJwj1HYIwio3vaYwujUT__QvS' }
+                value: { columns: [{ '463a5xdddvfbnjc539': '新ゲームタイトル' }], _crsf_token_kbkmorg: 'hogehogehogehoge' }
       responses:
         200:
           description: '更新結果。どこを編集してもそのゲームの全情報が返ってくる。ただし空のカラム情報は含まれない。'
@@ -360,6 +360,7 @@ components:
             example: [{ '3c3apx958539tgc57d': 'カラム1のタイトル' }, { '123ae104fzc9z4c5e2': 'カラム2のタイトル' }]
         _crsf_token_kbkmorg:
           type: string
+          example: 'hogehogehogehoge'
     schedulesItemResponse:
       type: object
       properties:
