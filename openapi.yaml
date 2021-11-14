@@ -1,0 +1,495 @@
+openapi: 3.0.2
+info:
+  title: Horaro API
+  description: ''
+  version: 1.1.0
+externalDocs:
+  description: Official
+  url: https://horaro.org/-/api
+servers:
+  - url: https://localhost:3000/
+  - url: https://horaro.org/
+paths:
+  /-/events:
+    post:
+      description: 'イベント作成'
+      tags:
+        - events
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+            example: 'PHPSESSID=xxxxxxxxxxxxxxxxx'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _crsf_token_kbkmorg:
+                  type: string
+                  description: CRSFトークン。ページに_crsf_token_kbkmorgで埋まってる。
+                name:
+                  type: string
+                  description: イベント名
+                  example: RTA in Japan
+                slug:
+                  type: string
+                  description: URLのやつ。ハイフンとかは使える。
+                website:
+                  type: string
+                  description: Webサイト
+                  example: http://example.com
+                twitch:
+                  type: string
+                  description: Twitch ID
+                  example: pastan04
+                twitter:
+                  type: string
+                  description: Twitter ID
+                  example: pasta04
+                theme:
+                  type: string
+                  description: テーマ
+                  example: yeti
+                secret:
+                  type: string
+                  description:
+      responses:
+        302:
+          description: 'https://horaro.org/-/events/{イベントID}にリダイレクト'
+
+  /-/events/{eventId}/schedules:
+    post:
+      description: 'スケジュール作成'
+      tags:
+        - events
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+            example: 'PHPSESSID=xxxxxxxxxxxxxxxxx'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                _crsf_token_kbkmorg:
+                  type: string
+                  description: CRSFトークン。ページのmetaタグにcsrf_tokenで埋まってる。
+                name:
+                  type: string
+                  description: スケジュール名
+                  example: RTA in Japan Winter 2021
+                slug:
+                  type: string
+                  description: URLのやつ。ハイフンとかは使える。
+                website:
+                  type: string
+                  description: Webサイト
+                  example: http://example.com
+                twitch:
+                  type: string
+                  description: Twitch ID
+                  example: pastan04
+                twitter:
+                  type: string
+                  description: Twitter ID
+                  example: pasta04
+                timezone:
+                  type: string
+                  description: タイムゾーン
+                  example: Asia/Tokyo
+                start_date:
+                  type: string
+                  description: 開始日
+                  example: 2021-11-14
+                start_time:
+                  type: string
+                  description: 開始時刻
+                  example: 00:45
+                setup_time:
+                  type: string
+                  description: セットアップタイム
+                  example: 10m05s
+                theme:
+                  type: string
+                  description: テーマ
+                  example: yeti
+                secret:
+                  type: string
+                  description:
+                hidden_secret:
+                  type: string
+                  description:
+      responses:
+        302:
+          description: 'https://horaro.org/-/schedules/{スケジュールID}にリダイレクト'
+  /-/schedules/{scheduleId}/columns:
+    post:
+      description: 'スケジュールにカラムを追加'
+      tags:
+        - schedules
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+            example: 'PHPSESSID=xxxxxxxxxxxxxxxxx'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schedulesColumn'
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schedulesColumnResponse'
+  /-/schedules/{scheduleId}/columns/{columnId}?_method=PUT:
+    post:
+      description: 'カラム情報編集'
+      tags:
+        - schedules
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+            example: 'PHPSESSID=xxxxxxxxxxxxxxxxx'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schedulesColumn'
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schedulesColumnResponse'
+  /-/schedules/{scheduleId}/columns/{gameId}?_method=DELETE:
+    post:
+      description: 'カラムを削除'
+      tags:
+        - schedules
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+            example: 'PHPSESSID=xxxxxxxxxxxxxxxxx'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DELETE'
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DELETEResponse'
+  /-/schedules/{scheduleId}/columns/move:
+    post:
+      description: 'カラム順を移動'
+      tags:
+        - schedules
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+            example: 'PHPSESSID=xxxxxxxxxxxxxxxxx'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Move'
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoveResponse'
+  /-/schedules/{scheduleId}/items:
+    post:
+      description: 'ゲームを追加'
+      tags:
+        - schedules
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+            example: 'PHPSESSID=xxxxxxxxxxxxxxxxx'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schedulesItem'
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schedulesItemResponse'
+  /-/schedules/{scheduleId}/items/{gameId}?_method=PATCH:
+    post:
+      description: 'ゲーム情報を編集'
+      tags:
+        - schedules
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+            example: 'PHPSESSID=xxxxxxxxxxxxxxxxx'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schedulesItemPATCH'
+            examples:
+              req1:
+                summary: EST編集
+                value: { length: 1820, _crsf_token_kbkmorg: 'mWLU86q9wt_XP_aiKjs5wy3656Ym-od1DtsgWCUfJwj1HYIwio3vaYwujUT__QvS' }
+              req2:
+                summary: ゲームタイトル等編集
+                value: { columns: [{ '463a5xdddvfbnjc539': '新ゲームタイトル' }], _crsf_token_kbkmorg: 'mWLU86q9wt_XP_aiKjs5wy3656Ym-od1DtsgWCUfJwj1HYIwio3vaYwujUT__QvS' }
+      responses:
+        200:
+          description: '更新結果。どこを編集してもそのゲームの全情報が返ってくる。ただし空のカラム情報は含まれない。'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schedulesItemPATCHResponse'
+  /-/schedules/{scheduleId}/items/{gameId}?_method=DELETE:
+    post:
+      description: 'ゲームを削除'
+      tags:
+        - schedules
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+            example: 'PHPSESSID=xxxxxxxxxxxxxxxxx'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DELETE'
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DELETEResponse'
+  /-/schedules/{scheduleId}/items/move:
+    post:
+      description: 'ゲーム順を移動'
+      tags:
+        - schedules
+      parameters:
+        - in: header
+          name: cookie
+          schema:
+            type: string
+            example: 'PHPSESSID=xxxxxxxxxxxxxxxxx'
+      requestBody:
+        description: ''
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Move'
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoveResponse'
+
+components:
+  schemas:
+    schedulesItem:
+      type: object
+      properties:
+        length:
+          type: integer
+          description: EST(秒)
+          example: 1800
+        columns:
+          type: 'array'
+          items:
+            type: object
+            description: カラム情報。カラムの数だけ要素がある。
+            properties:
+              columnId:
+                type: string
+            example: [{ '3c3apx958539tgc57d': 'カラム1のタイトル' }, { '123ae104fzc9z4c5e2': 'カラム2のタイトル' }]
+        _crsf_token_kbkmorg:
+          type: string
+    schedulesItemResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '485bhe13ay98zj4829'
+        length:
+          type: integer
+          description: EST(秒)
+          example: 1800
+        columns:
+          type: 'array'
+          description: 'レスポンス時、中身が空のカラム情報は返ってこない'
+          items:
+            type: object
+            properties:
+              { gameid }:
+                type: string
+          example: []
+        pos:
+          type: integer
+          required: false
+          example: 1
+    schedulesColumn:
+      type: object
+      properties:
+        hidden:
+          type: boolean
+        name:
+          type: string
+          example: 'New Column'
+        _crsf_token_kbkmorg:
+          type: string
+          example: 'hogehogehogehoge'
+    schedulesColumnResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: カラムID
+              example: 123ae104fzc9z4c5e2
+            hidden:
+              type: boolean
+              description: 隠しカラム
+            name:
+              type: string
+              description: カラムタイトル
+              example: 'New Column'
+            pos:
+              type: integer
+              description: 位置
+              example: 3
+    Move:
+      type: object
+      properties:
+        column:
+          type: string
+          description: 移動対象のID
+          example: 123ae104fzc9z4c5e2
+        position:
+          type: integer
+          description: 移動先のカラム位置
+          example: 2
+        _crsf_token_kbkmorg:
+          type: string
+          example: 'hogehogehogehoge'
+    MoveResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: 移動対象のID
+              example: 123ae104fzc9z4c5e2
+            pos:
+              type: integer
+              description: 位置
+              example: 2
+    schedulesItemPATCH:
+      type: object
+      properties:
+        columns:
+          type: object
+          properties:
+            columnId:
+              type: string
+          example: { '463a5xdddvfbnjc539': 'ゲームタイトル' }
+        _crsf_token_kbkmorg:
+          type: string
+          example: 'hogehogehogehoge'
+    schedulesItemPATCHResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              description: ゲームID
+              example: 175bkk0fpcb2e64874
+            columns:
+              type: object
+              properties:
+                columnId:
+                  type: string
+              example: { '463a5xdddvfbnjc539': 'ゲームタイトル', '3c3apx958539tgc57d': '走者A' }
+            length:
+              type: integer
+              example: 1800
+            pos:
+              type: integer
+              example: 2
+            _crsf_token_kbkmorg:
+              type: string
+              example: 'hogehogehogehoge'
+    DELETE:
+      type: object
+      properties:
+        _crsf_token_kbkmorg:
+          type: string
+          example: 'hogehogehogehoge'
+    DELETEResponse:
+      type: object
+      properties:
+        data:
+          type: boolean
+          example: true
+  examples:
